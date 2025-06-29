@@ -31,17 +31,21 @@
 
 
 
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { 
   FaBriefcase, 
   FaThLarge, 
   FaTasks, 
   FaClock, 
   FaFileAlt,
-  FaCog 
+  FaSignOutAlt
 } from "react-icons/fa";
 
+import axios from "axios";
+import { server } from "../../constants/api";
+
 const HRSidebar = () => {
+  const navigate = useNavigate();
   const { pathname } = useLocation();
   const navItemClass = (path) =>
     `flex items-center px-4 py-3 rounded-lg transition-all ${
@@ -49,6 +53,21 @@ const HRSidebar = () => {
         ? 'bg-blue-600 text-white shadow-md' 
         : 'text-gray-700 hover:bg-blue-100 hover:text-blue-700'
     }`;
+
+     const handleLogout = async()=>{
+          try {
+            const response = await axios.post(`${server}/hr/logout`,{},{
+              withCredentials: true
+            });
+            alert(response?.data?.message)
+            navigate('/')
+
+          } catch (error) {
+            console.log(error);
+            alert('internal server error')
+          }
+        }
+    
 
   return (
     <aside className="w-64 bg-white border-r h-screen p-4 flex flex-col">
@@ -80,17 +99,19 @@ const HRSidebar = () => {
           <FaFileAlt className="mr-3 h-5 w-5" />
           Worksheet Allocated
         </Link>
+
+         <Link to="/hr/dashboard/internRegister" className={navItemClass("/hr/dashboard/internRegister")}>
+          <FaFileAlt className="mr-3 h-5 w-5" />
+          Register Intern
+        </Link>
       </nav>
       
       {/* Logout at the bottom */}
       <div className="mt-auto py-4 border-t">
-        <Link 
-          to="/hr/logout" 
-          className={navItemClass("/hr/logout")}
-        >
-          <FaCog className="mr-3 h-5 w-5" />
-          Logout
-        </Link>
+         <button onClick={handleLogout} className={navItemClass("/logout")}>
+                 <FaSignOutAlt className="mr-3 h-5 w-5" />
+                 Logout
+               </button>
       </div>
     </aside>
   );

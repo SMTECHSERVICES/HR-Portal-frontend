@@ -1,7 +1,10 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FaThLarge, FaTasks, FaClock, FaFileAlt, FaSignOutAlt } from "react-icons/fa";
+import axios from "axios";
+import { server } from "../../constants/api";
 
 const InternSidebar = () => {
+  const navigate = useNavigate();
   const { pathname } = useLocation();
   const navItemClass = (path) =>
     `flex items-center px-4 py-3 rounded-lg transition-all ${
@@ -9,6 +12,19 @@ const InternSidebar = () => {
         ? 'bg-green-600 text-white shadow-md'
         : 'text-gray-700 hover:bg-green-100 hover:text-green-700'
     }`;
+
+    const handleLogout = async()=>{
+      try {
+        const response = await axios.post(`${server}/intern/logout`, {}, {
+  withCredentials: true
+});
+        alert(response?.data?.message);
+        navigate('/')
+      } catch (error) {
+        console.log(error);
+        alert('internal server error')
+      }
+    }
 
   return (
     <aside className="w-64 bg-white border-r h-screen p-4 flex flex-col">
@@ -39,10 +55,10 @@ const InternSidebar = () => {
       </nav>
 
       <div className="mt-auto py-4 border-t">
-        <Link to="/logout" className={navItemClass("/logout")}>
+        <button onClick={handleLogout} className={navItemClass("/logout")}>
           <FaSignOutAlt className="mr-3 h-5 w-5" />
           Logout
-        </Link>
+        </button>
       </div>
     </aside>
   );

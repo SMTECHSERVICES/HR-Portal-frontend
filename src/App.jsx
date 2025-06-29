@@ -9,7 +9,7 @@ const HRDashboard = lazy(() => import("./pages/hr/HRDashboard"))
 const AssignmentPage = lazy(() => import("./pages/hr/AssignmentPage"));
 const AttendancePage = lazy(() => import("./pages/hr/AttendancePage"));
 const WorksheetPage = lazy(() => import("./pages/hr/WorksheetPage"));
-
+const InternRegistration = lazy(()=>import('./pages/hr/InternRegistration'))
 
 const InternAuthPage = lazy(()=>import('./pages/intern/InternAuth'))
 const InternDashboardHome = lazy(()=>import('./pages/intern/InternDashboardHome'));
@@ -31,6 +31,7 @@ function App() {
           <Route path="/hr/dashboard/assignments" element={<AssignmentPage />} />
           <Route path="/hr/dashboard/attendance" element={<AttendancePage />} />
           <Route path="/hr/dashboard/worksheets" element={<WorksheetPage />} />
+            <Route path="/hr/dashboard/internRegister" element={<InternRegistration />} />
 
           {/* { INTERN ROutes} */}
           <Route path='/internLogin' element={<InternAuthPage />} />

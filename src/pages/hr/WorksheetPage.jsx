@@ -52,17 +52,9 @@ import HrLayout from "../../layout/HrLayout";
 const WorksheetPage = () => {
   const [file, setFile] = useState(null);
 
-  const handleUpload = (e) => {
-    setFile(e.target.files[0]);
-  };
+ 
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!file) return alert("Please select a file");
-    console.log("Uploading file:", file);
-    alert("Worksheet uploaded successfully!");
-    // You can send this to backend using axios + FormData
-  };
+
 
   return (
     <>
@@ -78,7 +70,7 @@ const WorksheetPage = () => {
             <h2 className="text-xl font-semibold mb-4">Live Worksheet</h2>
             <div className="border border-gray-300 rounded-lg overflow-hidden">
               <iframe
-                src="https://docs.google.com/spreadsheets/d/1B4Uu7KjhADUUqelrab_RjyfwXsAMF-91wBggVWeN5kw/edit?usp=sharing"
+                src="https://docs.google.com/spreadsheets/d/1yXIY58qtXEY6aOeRs6wvxOhjtfJJjcY8bZhPLsG4Gug/edit?usp=sharing"
                 width="100%"
                 height="600"
                 frameBorder="0"
