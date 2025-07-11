@@ -92,7 +92,11 @@ const HRSidebar = () => {
         
         <Link to="/hr/dashboard/attendance" className={navItemClass("/hr/dashboard/attendance")}>
           <FaClock className="mr-3 h-5 w-5" />
-          Attendance Tracker
+         Attendance
+        </Link>
+        <Link to="/hr/dashboard/employees" className={navItemClass("/hr/dashboard/employees")}>
+          <FaClock className="mr-3 h-5 w-5" />
+          All Employees
         </Link>
         
         <Link to="/hr/dashboard/worksheets" className={navItemClass("/hr/dashboard/worksheets")}>

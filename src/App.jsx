@@ -16,6 +16,8 @@ const InternDashboardHome = lazy(()=>import('./pages/intern/InternDashboardHome'
 const TaskPage = lazy(()=>import('./pages/intern/TaskPage'));
 const AttendanceStatusPage = lazy(()=>import('./pages/intern/AttendanceStatusPage'));
 const InternWorksheetPage = lazy(()=>import('./pages/intern/WorksheetViewPage'))
+const AllEmployeePage = lazy(()=>import("./pages/hr/AllEmployees"));
+const EmployeeDetailPage = lazy(()=>import('./pages/hr/EmployeeDetail'))
 
 function App() {
   const [count, setCount] = useState(0)
@@ -30,14 +32,16 @@ function App() {
           <Route path="/hr/dashboard" element={<HRDashboard />} />
           <Route path="/hr/dashboard/assignments" element={<AssignmentPage />} />
           <Route path="/hr/dashboard/attendance" element={<AttendancePage />} />
-          <Route path="/hr/dashboard/worksheets" element={<WorksheetPage />} />
+          <Route path="/hr/dashboard/employees" element={<AllEmployeePage />} />
+           <Route path="/hr/dashboard/employee/:id" element={<EmployeeDetailPage />} />
+           <Route path="/hr/dashboard/worksheets" element={<WorksheetPage />} />
             <Route path="/hr/dashboard/internRegister" element={<InternRegistration />} />
 
           {/* { INTERN ROutes} */}
           <Route path='/internLogin' element={<InternAuthPage />} />
           <Route path="/intern/dashboard" element={<InternDashboardHome />} />
           <Route path="/intern/dashboard/tasks" element={<TaskPage />} />
-          <Route path="/intern/dashboard/attendance" element={<AttendanceStatusPage />} />
+          <Route path="/intern/dashboard/employees" element={<AttendanceStatusPage />} />
           <Route path="/intern/dashboard/worksheets" element={<InternWorksheetPage />} />
         </Routes>
 
