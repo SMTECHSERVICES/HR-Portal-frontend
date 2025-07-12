@@ -30,7 +30,7 @@ const HrLayout = ({ children }) => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row">
+    <div className="h-screen overflow-hidden flex flex-col md:flex-row">
       {/* Hamburger for mobile */}
       <div className="md:hidden bg-white shadow px-4 py-3 flex items-center justify-between">
         <h1 className="text-xl font-semibold text-blue-800">HR Dashboard</h1>

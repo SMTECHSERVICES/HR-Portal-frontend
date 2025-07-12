@@ -81,6 +81,7 @@ import HrLayout from "../../layout/HrLayout";
 import axios from "axios";
 import { server } from "../../constants/api";
 import { useEffect, useState } from "react";
+import ExportDashboardExcel from "../../components/hr/ExportDashboardExcel";
 
 const HRDashboard = () => {
   const [metricsData, setMetricsData] = useState({
@@ -154,6 +155,7 @@ const HRDashboard = () => {
           )}
 
           <div className="mt-6">
+            <ExportDashboardExcel />
             <Outlet />
           </div>
         </main>

@@ -13,6 +13,7 @@ import {
   FaArrowLeft,
   FaUser
 } from 'react-icons/fa';
+import { BiCalendarWeek } from 'react-icons/bi';
 import { MdEventBusy } from 'react-icons/md';
 
 const EmployeeDetail = () => {
@@ -95,6 +96,7 @@ const markAttendance = async (status) => {
       case 'Absent': return 'bg-red-100 text-red-800';
       case 'Half Day': return 'bg-yellow-100 text-yellow-800';
       case 'Leave': return 'bg-blue-100 text-blue-800';
+      case 'Week off': return 'bg-orange-100 text-orange-800';
       default: return 'bg-gray-100 text-gray-800';
     }
   };
@@ -179,7 +181,7 @@ const markAttendance = async (status) => {
         {/* Attendance Marking Section */}
         <div className="bg-white rounded-xl shadow-md p-6 mb-8">
           <h2 className="text-xl font-bold text-gray-800 mb-4">Mark Today's Attendance</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
             <button
               onClick={() => markAttendance('Present')}
               className="px-4 py-3 cursor-pointer bg-green-600 text-white rounded-lg hover:bg-green-700 transition flex items-center justify-center gap-2"
@@ -189,24 +191,32 @@ const markAttendance = async (status) => {
             </button>
             <button
               onClick={() => markAttendance('Half Day')}
-              className="px-4 py-3 cursor-pointer bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition flex items-center justify-center gap-2"
+              className="px-4 py-3 cursor-pointer bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition flex items-center justify-center gap-1"
             >
               <FaExclamation className="text-xl" />
               Half Day
             </button>
             <button
               onClick={() => markAttendance('Absent')}
-              className="px-4 py-3 cursor-pointer bg-red-600 text-white rounded-lg hover:bg-red-700 transition flex items-center justify-center gap-2"
+              className="px-4 py-3 cursor-pointer bg-red-600 text-white rounded-lg hover:bg-red-700 transition flex items-center justify-center gap-1"
             >
               <FaTimes className="text-xl" />
               Absent
             </button>
             <button
               onClick={() => markAttendance('Leave')}
-              className="px-4 py-3 cursor-pointer bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center justify-center gap-2"
+              className="px-4 py-3 cursor-pointer bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center justify-center gap-1"
             >
               <MdEventBusy className="text-xl" />
               Leave
+            </button>
+
+              <button
+              onClick={() => markAttendance('Week off')}
+              className="px-4 py-3 cursor-pointer bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition flex items-center justify-center gap-1"
+            >
+              <BiCalendarWeek className="text-xl" />
+              Week off
             </button>
           </div>
         </div>

@@ -41,7 +41,7 @@ function App() {
           <Route path='/internLogin' element={<InternAuthPage />} />
           <Route path="/intern/dashboard" element={<InternDashboardHome />} />
           <Route path="/intern/dashboard/tasks" element={<TaskPage />} />
-          <Route path="/intern/dashboard/employees" element={<AttendanceStatusPage />} />
+          <Route path="/intern/dashboard/attendance" element={<AttendanceStatusPage />} />
           <Route path="/intern/dashboard/worksheets" element={<InternWorksheetPage />} />
         </Routes>
 

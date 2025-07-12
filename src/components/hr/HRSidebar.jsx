@@ -90,10 +90,10 @@ const HRSidebar = () => {
           Assignment Allocate
         </Link>
         
-        <Link to="/hr/dashboard/attendance" className={navItemClass("/hr/dashboard/attendance")}>
+        {/* <Link to="/hr/dashboard/attendance" className={navItemClass("/hr/dashboard/attendance")}>
           <FaClock className="mr-3 h-5 w-5" />
          Attendance
-        </Link>
+        </Link> */}
         <Link to="/hr/dashboard/employees" className={navItemClass("/hr/dashboard/employees")}>
           <FaClock className="mr-3 h-5 w-5" />
           All Employees
