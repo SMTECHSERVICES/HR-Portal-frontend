@@ -1,42 +1,3 @@
-// import InternLayout from "../../layout/InternLayout";
-// import axios from "axios";
-// import { server } from "../../constants/api";
-// import { useEffect } from "react";
-
-// const TaskPage = () => {
-//   useEffect(()=>{
-//     const fetchData = async()=>{
-//       const response = await axios.get(`${server}/intern/my-tasks`,{
-//         withCredentials:true
-//       })
-//     }
-
-//     fetchData()
-//   },[])
-//   return (
-//    <>
-//    <InternLayout>
-//      <div>
-//       <h1 className="text-2xl font-bold text-green-700 mb-4">My Assigned Tasks</h1>
-//       <p>List of tasks assigned by HR will appear here.</p>
-//       {/* Example static content */}
-//       <ul className="mt-4 space-y-3">
-//         <li className="p-3 border rounded bg-white shadow-sm">
-//           <strong>Task:</strong> Market Research<br />
-//           <strong>Deadline:</strong> 2025-07-05
-//         </li>
-//         <li className="p-3 border rounded bg-white shadow-sm">
-//           <strong>Task:</strong> Call 100 leads<br />
-//           <strong>Deadline:</strong> 2025-07-02
-//         </li>
-//       </ul>
-//     </div>
-//    </InternLayout>
-//    </>
-//   );
-// };
-
-// export default TaskPage;
 
 
 
@@ -57,6 +18,7 @@ const TaskPage = () => {
         const response = await axios.get(`${server}/intern/my-tasks`, {
           withCredentials: true
         });
+        console.log(response);
         setTasks(response.data.myTasks);
       } catch (err) {
         setError(err.response?.data?.message || 'Failed to fetch tasks');
@@ -138,6 +100,13 @@ const TaskPage = () => {
                       <span className="text-sm text-gray-500">
                         Due: {format(new Date(task.deadline), 'MMM d, yyyy')}
                       </span>
+                      {task.pptFile && (
+                        <span className="ml-4 text-blue-600 hover:text-blue-800 font-semibold underline text-sm">
+                          <a href={task.pptFile} target="_blank" rel="noopener noreferrer" download>
+                            See task link here
+                          </a>
+                        </span>
+                      )}
                     </div>
                   </div>
                   <button
