@@ -103,7 +103,7 @@ const TaskPage = () => {
                       {task.pptFile && (
                         <span className="ml-4 text-blue-600 hover:text-blue-800 font-semibold underline text-sm">
                           <a href={task.pptFile} target="_blank" rel="noopener noreferrer" download>
-                            See task link here
+                            Download Task
                           </a>
                         </span>
                       )}

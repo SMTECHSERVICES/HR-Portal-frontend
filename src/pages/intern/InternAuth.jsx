@@ -1,8 +1,5 @@
-
-
-
 import { useState } from 'react';
-import { FaEnvelope, FaLock } from 'react-icons/fa';
+import { FaEnvelope, FaLock, FaEye, FaEyeSlash } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { server } from '../../constants/api';
@@ -11,6 +8,7 @@ const InternAuth = () => {
   const navigate = useNavigate();
   const [loginData, setLoginData] = useState({ email: '', password: '' });
   const [errors, setErrors] = useState({});
+  const [showPassword, setShowPassword] = useState(false); // new state
 
   const handleLoginChange = (e) => {
     const { name, value } = e.target;
@@ -32,20 +30,18 @@ const InternAuth = () => {
       setErrors(validationErrors);
     } else {
       try {
-
-        const response = await axios.post(`${server}/intern/login`,{
+        const response = await axios.post(`${server}/intern/login`, {
           ...loginData
-        },{
-          withCredentials:true
-        })
+        }, {
+          withCredentials: true
+        });
         console.log(response);
-         alert('Login successful!',response.data.token);
-      navigate('/intern/dashboard');
+        alert('Login successful!', response.data.token);
+        navigate('/intern/dashboard');
       } catch (error) {
         console.log(error);
-        alert('something went wrong')
+        alert('something went wrong');
       }
-     
     }
   };
 
@@ -80,18 +76,23 @@ const InternAuth = () => {
                   <FaLock className="text-gray-400" />
                 </div>
                 <input
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
                   name="password"
                   value={loginData.password}
                   onChange={handleLoginChange}
-                  className={`w-full pl-10 pr-3 py-2 border ${errors.password ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
+                  className={`w-full pl-10 pr-10 py-2 border ${errors.password ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
                   placeholder="••••••••"
                 />
+                <div
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer text-gray-600 hover:text-gray-900"
+                  title={showPassword ? 'Hide Password' : 'Show Password'}
+                >
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                </div>
               </div>
               {errors.password && <p className="mt-1 text-sm text-red-600">{errors.password}</p>}
             </div>
-
-           
 
             <button
               type="submit"
