@@ -22,6 +22,7 @@ const EmployeeDetail = () => {
   const [employee, setEmployee] = useState(null);
   const [loading, setLoading] = useState(true);
   const [attendanceFilter, setAttendanceFilter] = useState('all');
+  const [selectedDate, setSelectedDate] = useState('');
   const [error, setError] = useState('');
 
   useEffect(() => {
@@ -43,33 +44,40 @@ const EmployeeDetail = () => {
     fetchData();
   }, [id]);
 
-const markAttendance = async (status) => {
-  try {
-    const response = await axios.post(
-      `${server}/hr/markAttendance/${id}`,
-      { status },
-      { withCredentials: true }
-    );
+  const markAttendance = async (status) => {
+    try {
+      const response = await axios.post(
+        `${server}/hr/markAttendance/${id}`,
+        { 
+          status,
+          ...(selectedDate && { date: selectedDate })
+        },
+        { withCredentials: true }
+      );
 
-    alert(response?.data?.message);
+      alert(response?.data?.message);
 
-    // Directly update attendance from backend response
-    setEmployee(prev => ({
-      ...prev,
-      attendance: response?.data?.attendance || prev.attendance
-    }));
+  setEmployee(prev => {
+  const updated = response?.data?.attendance || prev.attendance;
+  updated.sort((a, b) => new Date(b.date) - new Date(a.date));
+  return {
+    ...prev,
+    attendance: updated
+  };
+});
 
-  } catch (err) {
-    console.error('Error marking attendance:', err);
-    setError('Failed to mark attendance');
-  }
-};
+      setSelectedDate('');
+    } catch (err) {
+      console.error('Error marking attendance:', err);
+      setError('Failed to mark attendance');
+    }
+  };
 
   const filterAttendance = () => {
     if (!employee || !employee.attendance) return [];
-    
+
     const now = new Date();
-    
+
     switch (attendanceFilter) {
       case 'week':
         const oneWeekAgo = new Date();
@@ -77,14 +85,13 @@ const markAttendance = async (status) => {
         return employee.attendance.filter(a => 
           parseISO(a.date) > oneWeekAgo
         );
-        
       case 'month':
-        const oneMonthAgo = new Date();
-        oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
-        return employee.attendance.filter(a => 
-          parseISO(a.date) > oneMonthAgo
-        );
-        
+        const startOfMonth = new Date();
+  startOfMonth.setDate(1);
+  startOfMonth.setHours(0, 0, 0, 0);
+  return employee.attendance.filter(a =>
+    new Date(a.date) >= startOfMonth
+  );
       default:
         return employee.attendance;
     }
@@ -134,7 +141,8 @@ const markAttendance = async (status) => {
   return (
     <HrLayout>
       <div className="max-w-6xl mx-auto p-4 sm:p-6">
-        {/* Employee Profile Header */}
+
+        {/* Profile */}
         <div className="bg-white rounded-xl shadow-md overflow-hidden mb-8">
           <div className="md:flex">
             <div className="md:flex-shrink-0 p-6 flex items-center justify-center">
@@ -178,50 +186,42 @@ const markAttendance = async (status) => {
           </div>
         </div>
 
-        {/* Attendance Marking Section */}
+        {/* Attendance Marking */}
         <div className="bg-white rounded-xl shadow-md p-6 mb-8">
-          <h2 className="text-xl font-bold text-gray-800 mb-4">Mark Today's Attendance</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
-            <button
-              onClick={() => markAttendance('Present')}
-              className="px-4 py-3 cursor-pointer bg-green-600 text-white rounded-lg hover:bg-green-700 transition flex items-center justify-center gap-2"
-            >
-              <FaCheck className="text-xl" />
-              Present
-            </button>
-            <button
-              onClick={() => markAttendance('Half Day')}
-              className="px-4 py-3 cursor-pointer bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition flex items-center justify-center gap-1"
-            >
-              <FaExclamation className="text-xl" />
-              Half Day
-            </button>
-            <button
-              onClick={() => markAttendance('Absent')}
-              className="px-4 py-3 cursor-pointer bg-red-600 text-white rounded-lg hover:bg-red-700 transition flex items-center justify-center gap-1"
-            >
-              <FaTimes className="text-xl" />
-              Absent
-            </button>
-            <button
-              onClick={() => markAttendance('Leave')}
-              className="px-4 py-3 cursor-pointer bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center justify-center gap-1"
-            >
-              <MdEventBusy className="text-xl" />
-              Leave
-            </button>
+          <h2 className="text-xl font-bold text-gray-800 mb-4">Mark Attendance</h2>
 
-              <button
-              onClick={() => markAttendance('Week off')}
-              className="px-4 py-3 cursor-pointer bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition flex items-center justify-center gap-1"
-            >
-              <BiCalendarWeek className="text-xl" />
-              Week off
+          <div className="mb-4 flex flex-col sm:flex-row sm:items-center gap-4">
+            <label className="text-sm font-medium text-gray-700">
+              Select Date (optional):
+            </label>
+            <input
+              type="date"
+              value={selectedDate}
+              onChange={(e) => setSelectedDate(e.target.value)}
+              className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
+            <button onClick={() => markAttendance('Present')} className="px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 flex items-center justify-center gap-2">
+              <FaCheck className="text-xl" /> Present
+            </button>
+            <button onClick={() => markAttendance('Half Day')} className="px-4 py-3 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 flex items-center justify-center gap-2">
+              <FaExclamation className="text-xl" /> Half Day
+            </button>
+            <button onClick={() => markAttendance('Absent')} className="px-4 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 flex items-center justify-center gap-2">
+              <FaTimes className="text-xl" /> Absent
+            </button>
+            <button onClick={() => markAttendance('Leave')} className="px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center justify-center gap-2">
+              <MdEventBusy className="text-xl" /> Leave
+            </button>
+            <button onClick={() => markAttendance('Week off')} className="px-4 py-3 bg-orange-600 text-white rounded-lg hover:bg-orange-700 flex items-center justify-center gap-2">
+              <BiCalendarWeek className="text-xl" /> Week off
             </button>
           </div>
         </div>
 
-        {/* Assignments Section */}
+        {/* Assignments */}
         <div className="bg-white rounded-xl shadow-md p-6 mb-8">
           <h2 className="text-xl font-bold text-gray-800 mb-4">Assignments</h2>
           {employee.assignment.length === 0 ? (
@@ -229,10 +229,7 @@ const markAttendance = async (status) => {
           ) : (
             <div className="space-y-4">
               {employee.assignment.map((assignment) => (
-                <div 
-                  key={assignment._id} 
-                  className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition"
-                >
+                <div key={assignment._id} className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition">
                   <div className="flex justify-between items-start">
                     <div>
                       <h3 className="font-medium text-lg text-gray-900">{assignment.title}</h3>
@@ -267,36 +264,19 @@ const markAttendance = async (status) => {
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-4">
             <h2 className="text-xl font-bold text-gray-800">Attendance History</h2>
             <div className="flex flex-wrap gap-2">
-              <button
-                onClick={() => setAttendanceFilter('all')}
-                className={`px-4 py-2 rounded-lg flex items-center gap-2 ${
-                  attendanceFilter === 'all'
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                }`}
-              >
-                All
-              </button>
-              <button
-                onClick={() => setAttendanceFilter('week')}
-                className={`px-4 py-2 rounded-lg flex items-center gap-2 ${
-                  attendanceFilter === 'week'
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                }`}
-              >
-                This Week
-              </button>
-              <button
-                onClick={() => setAttendanceFilter('month')}
-                className={`px-4 py-2 rounded-lg flex items-center gap-2 ${
-                  attendanceFilter === 'month'
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                }`}
-              >
-                This Month
-              </button>
+              {['all', 'week', 'month'].map((filter) => (
+                <button
+                  key={filter}
+                  onClick={() => setAttendanceFilter(filter)}
+                  className={`px-4 py-2 rounded-lg flex items-center gap-2 ${
+                    attendanceFilter === filter
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                  }`}
+                >
+                  {filter === 'all' ? 'All' : filter === 'week' ? 'This Week' : 'This Month'}
+                </button>
+              ))}
             </div>
           </div>
 
@@ -307,27 +287,19 @@ const markAttendance = async (status) => {
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Date
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Status
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Day
-                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Day</th>
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
                   {filteredAttendance.map((record) => (
                     <tr key={record._id} className="hover:bg-gray-50">
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-900">
-                          {format(parseISO(record.date), 'dd MMM yyyy')}
-                        </div>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        {format(parseISO(record.date), 'dd MMM yyyy')}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full items-center gap-1 ${getStatusColor(record.status)}`}>
+                        <span className={`px-3 py-1 inline-flex text-xs font-semibold rounded-full items-center gap-1 ${getStatusColor(record.status)}`}>
                           {record.status === 'Present' && <FaCheck size={10} />}
                           {record.status === 'Half Day' && <FaExclamation size={10} />}
                           {record.status === 'Absent' && <FaTimes size={10} />}
@@ -354,12 +326,8 @@ const markAttendance = async (status) => {
         {error && (
           <div className="mt-6 bg-red-50 border-l-4 border-red-500 p-4">
             <div className="flex">
-              <div className="flex-shrink-0">
-                <FaExclamationCircle className="h-5 w-5 text-red-400" />
-              </div>
-              <div className="ml-3">
-                <p className="text-sm text-red-700">{error}</p>
-              </div>
+              <FaExclamationCircle className="h-5 w-5 text-red-400" />
+              <div className="ml-3 text-sm text-red-700">{error}</div>
             </div>
           </div>
         )}
